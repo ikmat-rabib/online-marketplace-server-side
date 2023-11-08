@@ -9,7 +9,6 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-console.log(process.env.DB_PASS);
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ij3feyg.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -29,10 +28,23 @@ async function run() {
 
     const jobCollection = client.db('marketplace').collection('jobs')
 
-    app.get('/jobs', async(req,res) => {
-        const cursor = jobCollection.find();
-        const result = await cursor.toArray();
-        res.send(result)
+    app.get('/jobs', async (req, res) => {
+      const cursor = jobCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+
+    app.get(`/jobs`, async (req, res) => {
+
+      const query = { category: { tabIndex } };
+
+      const options = {
+        projection: { _id: 0, job_title: 1, deadline: 1, min_price: 1, max_price: 1 },
+      };
+
+      const cursor = jobCollection.find(query,options);
+      const result = await cursor.toArray();
+      res.send(result)
     })
 
 
@@ -48,10 +60,10 @@ run().catch(console.dir);
 
 
 
-app.get('/', (req,res) => {
-    res.send('server running')
+app.get('/', (req, res) => {
+  res.send('server running')
 })
 
 app.listen(port, () => {
-    console.log(`site server running port ${port}`);
+  console.log(`site server running port ${port}`);
 })
