@@ -24,19 +24,24 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const jobCollection = client.db('marketplace').collection('jobs')
 
+    // app.get('/jobs', async (req, res) => {
+    //   const cursor = jobCollection.find();
+    //   const result = await cursor.toArray();
+    //   res.send(result)
+    // })
+
     app.get('/jobs', async (req, res) => {
-      const cursor = jobCollection.find();
-      const result = await cursor.toArray();
-      res.send(result)
-    })
 
-    app.get(`/jobs`, async (req, res) => {
+      // const category  = req.params.category;
 
-      const query = { category: { tabIndex } };
+      let query = {};
+      if (req.query?.category) {
+        query = {category: req.query.category}
+      }
 
       const options = {
         projection: { _id: 0, job_title: 1, deadline: 1, min_price: 1, max_price: 1 },
@@ -49,7 +54,7 @@ async function run() {
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
