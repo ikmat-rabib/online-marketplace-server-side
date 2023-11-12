@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const app = express();
 const port = process.env.PORT || 5000;
@@ -27,31 +27,45 @@ async function run() {
     // await client.connect();
 
     const jobCollection = client.db('marketplace').collection('jobs')
+    const bidJobCollection = client.db('marketplace').collection('bidJobs')
 
-    // app.get('/jobs', async (req, res) => {
-    //   const cursor = jobCollection.find();
-    //   const result = await cursor.toArray();
-    //   res.send(result)
-    // })
-
+    
     app.get('/jobs', async (req, res) => {
-
-      // const category  = req.params.category;
-
+      
       let query = {};
       if (req.query?.category) {
         query = {category: req.query.category}
       }
-
+      
       const options = {
-        projection: { _id: 0, job_title: 1, deadline: 1, min_price: 1, max_price: 1 },
+        projection: { _id: 1, job_title: 1, deadline: 1, min_price: 1, max_price: 1, description: 1  },
       };
-
+      
       const cursor = jobCollection.find(query,options);
       const result = await cursor.toArray();
       res.send(result)
     })
+    
+    app.get('/job/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await jobCollection.findOne(query);
+      res.send(result)
+    })
 
+    app.post('/add-job', async(req,res) => {
+      const newJob = req.body;
+      console.log(newJob);
+      const result = await jobCollection.insertOne(newJob)
+      res.send(result)
+    })
+
+    app.post('/bid-job', async(req,res) => {
+      const newBid = req.body;
+      console.log(newBid);
+      const result = await bidJobCollection.insertOne(newBid)
+      res.send(result)
+    })
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
