@@ -29,20 +29,28 @@ async function run() {
     const jobCollection = client.db('marketplace').collection('jobs')
     const bidJobCollection = client.db('marketplace').collection('bidJobs')
 
+    // app.get('/jobs', async (req,res) => {
+
+    //   console.log(req.query.email);
+    //   let query = {};
+    //   if (req.query?.email) {
+    //     query = { email: req.query.email}
+    //   }
+
+    //   const result = await jobCollection.find(query).toArray();
+    //   res.send(result)
+    // })
     
     app.get('/jobs', async (req, res) => {
       
       let query = {};
       if (req.query?.category) {
         query = {category: req.query.category}
+      } else if (req.query?.email) {
+        query = { email: req.query.email}
       }
       
-      const options = {
-        projection: { _id: 1, job_title: 1, deadline: 1, min_price: 1, max_price: 1, description: 1  },
-      };
-      
-      const cursor = jobCollection.find(query,options);
-      const result = await cursor.toArray();
+      const result = await jobCollection.find(query).toArray();
       res.send(result)
     })
     
