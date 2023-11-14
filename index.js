@@ -89,7 +89,7 @@ async function run() {
       const updatedJob = req.body;
       const job = {
         $set: {
-          job_title: updatedJob.name, 
+          job_title: updatedJob.job_title, 
           category: updatedJob.category, 
           deadline: updatedJob.deadline, 
           min_price: updatedJob.min_price, 
