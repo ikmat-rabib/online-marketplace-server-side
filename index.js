@@ -61,6 +61,13 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/bidJobs', async (req, res) => {
+      const email = req.query.email;
+      const query = {email: email}
+      const result = await bidJobCollection.find(query).toArray()
+      res.send(result)
+    })
+
     app.post('/add-job', async(req,res) => {
       const newJob = req.body;
       console.log(newJob);
