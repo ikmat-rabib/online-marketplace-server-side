@@ -68,6 +68,33 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/my_bid', async (req, res) => {
+      let query = {}
+      if (req.query?.email) {
+        query = {
+          bidderEmail
+            : req.query.email
+        }
+      }
+      const cursor = bidJobCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    
+    app.get('/bid_req', async (req, res) => {
+      let query = {}
+      if (req.query?.email) {
+        query = {
+          employerEmail
+            : req.query.email
+        }
+      }
+      const cursor = bidJobCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+
     app.post('/add-job', async(req,res) => {
       const newJob = req.body;
       console.log(newJob);
