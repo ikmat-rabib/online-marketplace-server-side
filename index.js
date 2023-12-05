@@ -12,7 +12,8 @@ const corsConfig = {
   origin: [
     'http://localhost:5173',
     'https://assignment-11-marketplace.web.app',
-    'https://assignment-11-marketplace.firebaseapp.com'
+    'https://assignment-11-marketplace.firebaseapp.com',
+    "https://juvenile-driving.surge.sh"
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE']
