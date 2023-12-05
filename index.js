@@ -137,13 +137,13 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) }
       const options = { upsert: true };
-      const updateJob = req.body;
-      const job = {
+      const updatedStatus = req.body;
+      const status = {
         $set: {
-          status: updateJob.status,
+          status: updatedStatus.status,
         }
       }
-      const result = await bidJobCollection.updateOne(filter, job, options);
+      const result = await bidJobCollection.updateOne(filter, status, options);
       res.send(result);
     })
 
